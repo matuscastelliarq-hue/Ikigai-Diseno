@@ -1,0 +1,13 @@
+{
+  "name": "ikigai-web",
+  "version": "1.0.0",
+  "description": "Ikigai Diseño website",
+  "main": "index.js",
+  "dependencies": {
+    "transbank-sdk": "^4.0.0",
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.15.1"
+  }
+}

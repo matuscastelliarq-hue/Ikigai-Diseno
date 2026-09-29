@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ikigai ERP - Panel de Administración</title>
+    <link rel="icon" type="image/png" href="assets/Ik negro 2.png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js and Ionicons -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
+
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-card: transparent;
+            --bg-card-hover: rgba(0, 0, 0, 0.02);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #d1b99a;
+            --accent-hover: #bda381;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --border: rgba(0, 0, 0, 0.08);
+            --font-primary: 'Outfit', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-secondary);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 25px 25px 25px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            object-fit: contain;
+        }
+
+        .sidebar-header h2 {
+            font-family: var(--font-primary);
+            font-size: 1.4rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 0 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item ion-icon {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-main);
+            background-color: var(--bg-card-hover);
+        }
+
+        .nav-item.active {
+            border-left: 4px solid var(--accent);
+            background-color: var(--bg-card);
+            color: var(--accent);
+        }
+
+        /* Forms */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            font-family: var(--font-primary);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        /* Common Elements */
+        .card {
+            background-color: var(--bg-card);
+            border: none;
+            border-radius: 0;
+            padding: 10px 20px;
+            box-shadow: none;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-family: var(--font-primary);
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        button, .btn {
+            background-color: var(--accent);
+            color: #1e293b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        button.btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        button.btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        button.danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        button.danger:hover {
+            background-color: #dc2626;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background-color: rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+        }
+
+        /* Tables */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: transparent;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        tr:hover td {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        /* Dashboard KPI Vertical */
+        .kpi-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .kpi-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kpi-info h4 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-info p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 5px;
+            font-family: var(--font-primary);
+        }
+
+        .kpi-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            opacity: 0.8;
+        }
+
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            min-height: 250px;
+            height: auto;
+            align-items: flex-start;
+        }
+
+        .kanban-column {
+            background-color: var(--bg-sidebar);
+            min-width: 320px;
+            max-width: 320px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+        }
+
+        .kanban-column-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255,255,255,0.02);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .kanban-column-header h3 {
+            font-family: var(--font-primary);
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        .kanban-column-header .badge {
+            background-color: var(--accent);
+            color: #1e293b;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .kanban-cards-container {
+            padding: 12px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 150px;
+        }
+
+        .kanban-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .kanban-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .kanban-card h4 {
+            font-family: var(--font-primary);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .kanban-card-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .kanban-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .kanban-card-price {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .kanban-card-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .kanban-card-actions button {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        /* Modules */
+        .module {
+            display: none;
+            flex-direction: column;
+            gap: 25px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .module.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 550px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalScale 0.3s ease;
+        }
+
+        @keyframes modalScale {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-primary);
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none !important;
+            border: none !important;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0 !important;
+        }
+
+        .modal-close:hover {
+            color: var(--text-main);
+        }
+
+        /* Status colors */
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-danger { background-color: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .status-success { background-color: rgba(16, 185, 129, 0.2); color: #a7f3d0; }
+        .status-warning { background-color: rgba(245, 158, 11, 0.2); color: #fde68a; }
+        
+        /* Vertical Layouts */
+        .split-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .split-grid {
+                grid-template-columns: 1fr;
+            }
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+            .sidebar {
+                position: fixed;
+                left: -300px;
+                top: 0;
+                height: 100vh;
+                z-index: 10000;
+                transition: left 0.3s ease;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .content {
+                padding: 15px;
+                padding-bottom: 90px;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10001;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Mobile menu elements -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <ion-icon name="menu-outline"></ion-icon>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <!-- Usamos un placeholder elegante invertido -->
+            <img src="assets/Ik negro 2.png" alt="Logo Ikigai" onerror="this.src='https://placehold.co/100/png?text=IK'">
+            <h2>Ikigai ERP</h2>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="switchTab('dashboard')">
+                <ion-icon name="grid-outline"></ion-icon>
+                <span>Dashboard</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('productos')">
+                <ion-icon name="list-outline"></ion-icon>
+                <span>Catálogo</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('pedidos')">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>Pedidos (Kanban)</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('cadena_procesos')">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>Cadena de Procesos</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('inventario')">
+                <ion-icon name="cube-outline"></ion-icon>
+                <span>Inventario de Stock</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('finanzas')">
+                <ion-icon name="cash-outline"></ion-icon>
+                <span>Finanzas</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('analiticas')">
+                <ion-icon name="stats-chart-outline"></ion-icon>
+                <span>Métricas Web</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('ajustes')">
+                <ion-icon name="settings-outline"></ion-icon>
+                <span>Configuración</span>
+            </li>
+            <li class="nav-item" onclick="logout()" style="margin-top: 20px; color: var(--danger);">
+                <ion-icon name="log-out-outline"></ion-icon>
+                <span style="font-weight: bold;">Cerrar Sesión</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content">
+
+        <!-- 1. DASHBOARD -->
+        <div id="mod-dashboard" class="module active">
+            <div class="header">
+                <h1>Dashboard de Control</h1>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Pedidos Activos</h4>
+                        <p id="kpi-pedidos-activos">0</p>
+                    </div>
+                    <ion-icon name="cart-outline" class="kpi-icon"></ion-icon>
+                </div>
+
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Utilidad General</h4>
+                        <p id="kpi-ganancia">$0</p>
+                    </div>
+                    <ion-icon name="cash-outline" class="kpi-icon" style="color:var(--accent);"></ion-icon>
+                </div>
+            </div>
+
+            <div class="split-grid">
+                <div class="card">
+                    <h3><ion-icon name="alert-circle-outline"></ion-icon> Alertas de Producción e Inventario</h3>
+                    <div id="dashboard-alerts" style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                        <p style="color:var(--text-muted);">No hay alertas críticas en el inventario o la producción.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><ion-icon name="cloud-upload-outline"></ion-icon> Acciones de Datos</h3>
+                    <p style="margin: 10px 0; color: var(--text-muted); font-size: 0.9rem;">Si es la primera vez que configuras el sistema, puedes sincronizar los datos locales del archivo `data.js` hacia Supabase.</p>
+                    <button id="btn-poblar-db" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <ion-icon name="sync-outline"></ion-icon> Poblar BD desde Catálogo Local
+                    </button>
+                    <p id="poblar-status" style="margin-top: 10px; font-weight: bold; text-align: center; font-size: 0.9rem;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. GESTION DE PRODUCTOS -->
+        <div id="mod-productos" class="module">
+            <div class="header">
+                <h1>Catálogo</h1>
+                <button onclick="openProductModal()"><ion-icon name="add-outline"></ion-icon> Nuevo Producto</button>
+            </div>
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div class="table-container">
+                    <table id="table-productos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Línea</th>
+                                <th>Medidas</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Cargando catálogo...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. KANBAN DE PEDIDOS -->
+        <div id="mod-pedidos" class="module">
+            <div class="header">
+                <h1>Pedidos y Kanban de Producción</h1>
+            </div>
+            
+            <div class="kanban-board">
+                <!-- Col 1: Recibido y gestión de materiales -->
+                <div class="kanban-column" id="col-recibido" ondragover="allowDrop(event)" ondrop="drop(event, 'a) Recibido y gestión de materiales')">
+                    <div class="kanban-column-header">
+                        <h3>a) Recibido y Gestión</h3>
+                        <span class="badge" id="count-recibido">0</span>
+                    </div>
+                    <div class="kanban-cards-container" id="cards-recibido"></div>
+                </div>
+
+                <!-- Col 2: CNC / Corte -->
+                <div class="kanban-column" id="col-cnc" ondragover="allowDrop(event)" ondrop="drop(event, 'b) CNC/Dimensionado')">
+                    <div class="kanban-column-header">
+                        <h3>b) CNC / Corte</h3>
+                        <span class="badge" id="count-cnc">0</span>
+                    </div>
+                    <div class="kanban-cards-container" id="cards-cnc"></div>
+                </div>
+
+                <!-- Col 3: Taller -->
+                <div class="kanban-column" id="col-taller" ondragover="allowDrop(event)" ondrop="drop(event, 'c) Taller')">
+                    <div class="kanban-column-header">
+                        <h3>c) Taller</h3>
+                        <span class="badge" id="count-taller">0</span>
+                    </div>
+                    <div class="kanban-cards-container" id="cards-taller"></div>
+                </div>
+
+                <!-- Col 4: Despacho -->
+                <div class="kanban-column" id="col-despacho" ondragover="allowDrop(event)" ondrop="drop(event, 'd) Despacho')">
+                    <div class="kanban-column-header">
+                        <h3>d) Despacho</h3>
+                        <span class="badge" id="count-despacho">0</span>
+                    </div>
+                    <div class="kanban-cards-container" id="cards-despacho"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. CADENA DE PROCESOS -->
+        <div id="mod-cadena_procesos" class="module">
+            <div class="header" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <h1>Cadena de Procesos</h1>
+                    <button onclick="guardarCadenaProcesos()"><ion-icon name="save-outline"></ion-icon> Guardar Cambios</button>
+                </div>
+            </div>
+            
+            <div class="card table-container" style="padding: 10px;">
+                <table id="table-procesos" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 8px; text-align: left;">Producto</th>
+                            <th style="padding: 8px; text-align: center;" title="Gestión de material">Gest. Mat.</th>
+                            <th style="padding: 8px; text-align: center;" title="Servicio de corte o CNC">Corte/CNC</th>
+                            <th style="padding: 8px; text-align: center;" title="Despacho de material">Despacho</th>
+                            <th style="padding: 8px; text-align: center;" title="Días de mano de obra en taller">Mano de Obra</th>
+                            <th style="padding: 8px; text-align: center;" title="Suma de días del producto">Total días hábiles</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-procesos">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; gap: 20px; align-items: center; background: var(--bg-sidebar); padding: 15px; border-radius: 8px; width: 100%; border: 1px solid var(--border); margin-top: 10px;">
+                <div>
+                    <label style="font-weight: 500; display: block; margin-bottom: 5px; font-size: 0.9rem;">Días de aplazamiento global (vacaciones/emergencias)</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Añade días de espera adicional a la entrega de todo pedido nuevo (Afecta a todos los productos).</p>
+                    <input type="number" id="input-dias-aplazamiento" min="0" value="0" style="padding: 6px; border: 1px solid var(--border); border-radius: 4px; width: 80px; font-size: 0.9rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. INVENTARIO -->
+        <div id="mod-inventario" class="module">
+            <div class="header" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <h1>Inventario de Productos Terminados</h1>
+                    <button onclick="guardarStock()"><ion-icon name="save-outline"></ion-icon> Guardar Stock</button>
+                </div>
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem;">
+                    Asigna la cantidad de unidades fabricadas (mermas u optimizaciones) que tienes listas para entrega inmediata. Los productos con stock ignorarán el calendario de fabricación.
+                </p>
+            </div>
+            
+            <div class="card table-container" style="padding: 10px; margin-top: 20px;">
+                <table id="table-stock" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 8px; text-align: left;">Producto</th>
+                            <th style="padding: 8px; text-align: left;">Línea</th>
+                            <th style="padding: 8px; text-align: center;" title="Stock disponible para envío inmediato">Stock Disponible</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-stock">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. FINANZAS -->
+        <div id="mod-finanzas" class="module">
+            <div class="header">
+                <h1>Reporte Financiero y Utilidad General</h1>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Ingresos Brutos</h4>
+                        <p id="kpi-fin-ingresos">$0</p>
+                    </div>
+                    <ion-icon name="wallet-outline" class="kpi-icon" style="color:var(--text-muted);"></ion-icon>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Descuentos Legales</h4>
+                        <p id="kpi-fin-descuentos">$0</p>
+                    </div>
+                    <ion-icon name="receipt-outline" class="kpi-icon" style="color:var(--danger);"></ion-icon>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Costos Variables</h4>
+                        <p id="kpi-fin-variables">$0</p>
+                    </div>
+                    <ion-icon name="cube-outline" class="kpi-icon" style="color:var(--warning);"></ion-icon>
+                </div>
+                <div class="card kpi-card">
+                    <div class="kpi-info">
+                        <h4>Costos Fijos Pagados</h4>
+                        <p id="kpi-fin-fijos">$0</p>
+                    </div>
+                    <ion-icon name="business-outline" class="kpi-icon" style="color:var(--danger);"></ion-icon>
+                </div>
+                <div class="card kpi-card" style="border-left: 4px solid var(--success);">
+                    <div class="kpi-info">
+                        <h4>Utilidad General</h4>
+                        <p id="kpi-fin-utilidad" style="color: var(--success);">$0</p>
+                    </div>
+                    <ion-icon name="cash-outline" class="kpi-icon" style="color:var(--success);"></ion-icon>
+                </div>
+            </div>
+
+            <div class="split-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="card">
+                    <h3>Costos Fijos Mensuales</h3>
+                    <div class="table-container">
+                        <table style="font-size: 0.9rem;">
+                            <thead>
+                                <tr><th>Ítem</th><th>Valor (CLP)</th><th>Acción</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Electricidad</td>
+                                    <td><input type="number" id="cf-mensual-elec" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Electricidad', 'cf-mensual-elec', 1)">Pagar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Publicidad RRSS</td>
+                                    <td><input type="number" id="cf-mensual-pub" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Publicidad RRSS', 'cf-mensual-pub', 1)">Pagar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Mantención Herramientas</td>
+                                    <td><input type="number" id="cf-mensual-man" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Mantención Herramientas', 'cf-mensual-man', 1)">Pagar</button></td>
+                                </tr>
+                                <tr style="font-weight: bold; background-color: rgba(0,0,0,0.02);">
+                                    <td>Total Mensual Estimado</td>
+                                    <td colspan="2" id="cf-mensual-total">$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Costos Fijos Anuales</h3>
+                    <div class="table-container">
+                        <table style="font-size: 0.9rem;">
+                            <thead>
+                                <tr><th>Ítem</th><th>Valor (CLP)</th><th>Acción</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Impuesto a la renta</td>
+                                    <td><input type="number" id="cf-anual-imp" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Impuesto a la renta', 'cf-anual-imp', 12)">Pagar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Dominio de internet</td>
+                                    <td><input type="number" id="cf-anual-dom" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Dominio de internet', 'cf-anual-dom', 12)">Pagar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Membresía email</td>
+                                    <td><input type="number" id="cf-anual-ema" value="0" class="cp-input" style="width: 100%;" onchange="guardarConfigFinanzas()"></td>
+                                    <td><button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8rem;" onclick="registrarPagoFijo('Membresía email', 'cf-anual-ema', 12)">Pagar</button></td>
+                                </tr>
+                                <tr style="font-weight: bold; background-color: rgba(0,0,0,0.02);">
+                                    <td>Total Anual Estimado</td>
+                                    <td colspan="2" id="cf-anual-total">$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3><ion-icon name="time-outline"></ion-icon> Historial y Próximos Pagos de Costos Fijos</h3>
+                <div class="table-container" style="max-height: 200px; overflow-y:auto;">
+                    <table id="table-proximos-pagos" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Ítem</th>
+                                <th>Monto Pagado</th>
+                                <th>Fecha de Pago</th>
+                                <th>Próximo Pago (Estimado)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-proximos-pagos">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay pagos registrados.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card" style="overflow-x: auto;">
+                <h3>Ingresos y Costos Variables por Pedido</h3>
+                <div class="kanban-board" id="finanzas-pedidos-container" style="height: auto; min-height: 350px; padding-bottom: 20px; gap: 15px;">
+                    <!-- Tarjetas de pedidos generadas por JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. MÉTRICAS WEB -->
+        <div id="mod-analiticas" class="module">
+            <div class="header">
+                <h1>Métricas Web</h1>
+                <button onclick="refreshAnaliticas()"><ion-icon name="refresh-outline"></ion-icon> Actualizar Datos</button>
+            </div>
+            
+            <div class="kpi-grid" style="flex-direction: row; flex-wrap: wrap;">
+                <div class="card kpi-card" style="flex:1; min-width:200px;">
+                    <div class="kpi-info">
+                        <h4>Total Visitas</h4>
+                        <p id="kpi-visitas-totales">0</p>
+                    </div>
+                    <ion-icon name="eye-outline" class="kpi-icon"></ion-icon>
+                </div>
+                <div class="card kpi-card" style="flex:1; min-width:200px;">
+                    <div class="kpi-info">
+                        <h4>Visitantes Únicos</h4>
+                        <p id="kpi-visitantes-unicos">0</p>
+                    </div>
+                    <ion-icon name="people-outline" class="kpi-icon" style="color:var(--info);"></ion-icon>
+                </div>
+                <div class="card kpi-card" style="flex:1; min-width:200px;">
+                    <div class="kpi-info">
+                        <h4>Tiempo Prom. por Sesión</h4>
+                        <p id="kpi-tiempo-promedio">0s</p>
+                    </div>
+                    <ion-icon name="time-outline" class="kpi-icon" style="color:var(--warning);"></ion-icon>
+                </div>
+                <div class="card kpi-card" style="flex:1; min-width:200px;">
+                    <div class="kpi-info">
+                        <h4>Entradas Showroom</h4>
+                        <p id="kpi-showroom">0</p>
+                    </div>
+                    <ion-icon name="storefront-outline" class="kpi-icon" style="color:var(--accent);"></ion-icon>
+                </div>
+            </div>
+
+            <div class="split-grid" style="grid-template-columns: 2fr 1fr;">
+                <div class="card">
+                    <h3>Top 10 Productos más vistos</h3>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="chart-productos-clicks"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Dispositivos (Móvil vs Escritorio)</h3>
+                    <div style="height: 300px; position: relative; display:flex; justify-content:center;">
+                        <canvas id="chart-dispositivos"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. AJUSTES -->
+        <div id="mod-ajustes" class="module">
+            <div class="header">
+                <h1>Configuración General del Sistema</h1>
+            </div>
+            <div class="card" style="max-width:600px;">
+                <h3>Operaciones de Mantenimiento</h3>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 20px;">Utiliza estas herramientas para la limpieza y mantenimiento de la base de datos.</p>
+                
+                <button type="button" onclick="borrarTodosLosPedidos()" style="background-color: var(--danger); width: 100%;">
+                    <ion-icon name="trash-outline"></ion-icon> Borrar todos los pedidos del Kanban
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: PRODUCTO (NUEVO / EDITAR) -->
+    <div id="modal-producto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-producto-titulo">Nuevo Producto</h2>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            <form id="form-producto" onsubmit="saveProduct(event)">
+                <input type="hidden" id="prod-edit-mode" value="false">
+                <div class="form-group">
+                    <label>ID del Producto (Ej: zen-9, cont-8)</label>
+                    <input type="text" id="prod-id" required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre del Producto</label>
+                    <input type="text" id="prod-nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción General</label>
+                    <textarea id="prod-descripcion" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Línea de Producto</label>
+                    <select id="prod-linea-id" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Precio (CLP)</label>
+                    <input type="number" id="prod-precio" required>
+                </div>
+                <div class="form-group">
+                    <label>Medidas (Ej: 120 x 80 x a75 cm)</label>
+                    <textarea id="prod-medidas" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Material Principal (Ej: Roble, Pino)</label>
+                    <textarea id="prod-material" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Uso (Ej: Interior, Exterior, Decorativo)</label>
+                    <textarea id="prod-uso" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>URLs de Imágenes (Separadas por comas)</label>
+                    <textarea id="prod-imagenes" rows="3" placeholder="assets/Línea ZEN/Mesa ZEN 1.png, assets/Línea ZEN/Mesa ZEN 2.png"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Stock Mínimo Base</label>
+                    <input type="number" id="prod-stock-base" value="5" min="0">
+                </div>
+                
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
+                    <button type="button" class="btn-secondary" onclick="closeProductModal()">Cancelar</button>
+                    <button type="submit"><ion-icon name="save-outline"></ion-icon> Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: REGISTRAR TRANSACCION FINANCIERA -->
+    <div id="modal-finanzas" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Registrar Transacción</h2>
+                <button class="modal-close" onclick="closeFinanceModal()">&times;</button>
+            </div>
+            <form id="form-ajuste-fin" onsubmit="saveFinanceTransaction(event)">
+                <div class="form-group">
+                    <label>Tipo de Movimiento</label>
+                    <select id="fin-tipo" required>
+                        <option value="egreso">Egreso (Gasto)</option>
+                        <option value="ingreso">Ingreso (Entrada)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="fin-categoria" required>
+                        <option value="compra_material">Compra de Material</option>
+                        <option value="logistica">Logística / Despacho</option>
+                        <option value="mano_obra">Mano de Obra / Taller</option>
+                        <option value="pago_cliente">Pago de Cliente</option>
+                        <option value="otros">Otros Gastos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monto (CLP)</label>
+                    <input type="number" id="fin-monto" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción / Detalle</label>
+                    <input type="text" id="fin-descripcion" required placeholder="Ej: Compra 10m2 de pino">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                    <button type="button" class="btn-secondary" onclick="closeFinanceModal()">Cancelar</button>
+                    <button type="submit"><ion-icon name="save-outline"></ion-icon> Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALLES DE PEDIDO -->
+    <div id="modal-pedido-detalle" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Detalles de Pedido</h2>
+                <button class="modal-close" onclick="closePedidoDetailModal()">&times;</button>
+            </div>
+            <div id="pedido-detalle-content" style="display:flex; flex-direction:column; gap:15px;">
+                <!-- Cargado dinámicamente por JS -->
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
+                <button class="btn-secondary" onclick="closePedidoDetailModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
+    
+    <script>
+        // Mobile Sidebar Toggle
+        window.toggleSidebar = function() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('open');
+        }
+
+        // Tab switcher
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Buscamos el elemento clickeado o el correspondiente a la pestaña
+            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(item => item.getAttribute('onclick').includes(tabId));
+            if (activeNav) activeNav.classList.add('active');
+            
+            document.querySelectorAll('.module').forEach(el => el.classList.remove('active'));
+            const mod = document.getElementById('mod-' + tabId);
+            if (mod) mod.classList.add('active');
+            
+            // Close sidebar on mobile
+            document.querySelector('.sidebar').classList.remove('open');
+            document.querySelector('.sidebar-overlay').classList.remove('open');
+            
+            // Disparar evento para recargar la pestaña en admin.js si es necesario
+            const event = new CustomEvent('tabswitched', { detail: { tab: tabId } });
+            window.dispatchEvent(event);
+        }
+    </script>
+</body>
+</html>

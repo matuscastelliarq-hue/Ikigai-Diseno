@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Get Token</title></head>
+<body>
+    <div id="result">Fetching...</div>
+    <script>
+        const supabaseUrl = 'https://uweuupdtxzkwiugaackz.supabase.co';
+        const supabaseKey = 'sb_publishable_0TuBGwD_SSK4cJVn5G_Hyg_3cubQx1E';
+        
+        fetch(`${supabaseUrl}/rest/v1/pedidos?select=*&order=fecha_ingreso.desc&limit=1`, {
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            document.getElementById('result').textContent = 'Error: ' + err.message;
+        });
+    </script>
+</body>
+</html>

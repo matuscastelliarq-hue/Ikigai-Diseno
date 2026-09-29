@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <script>
+        const supabaseUrl = 'https://uweuupdtxzkwiugaackz.supabase.co';
+        const supabaseKey = 'sb_publishable_0TuBGwD_SSK4cJVn5G_Hyg_3cubQx1E';
+        const arrimoImages = ['assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 1.png', 'assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 2.png'];
+        fetch(`${supabaseUrl}/rest/v1/productos?id=eq.cont-1`, {
+            method: 'PATCH',
+            headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imagenes: arrimoImages })
+        }).then(() => console.log("Done"));
+    </script>
+</body>
+</html>

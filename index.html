@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ikigai Diseño</title>
+    <link rel="icon" type="image/png" href="assets/Ik negro 2.png">
+    <!-- Usar fuentes de Google: Inter y Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=8.0">
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js" defer></script>
+    
+    <!-- Ionicons para iconos simples -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" defer></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" defer></script>
+</head>
+<body>
+
+    <!-- Header (Barra Superior) -->
+    <header class="header" id="header">
+        <div class="logo-container" onclick="navigate('home')">
+            <!-- Asumiendo que las imágenes se copiarán en assets -->
+            <img src="assets/Ik blanco 2.png" alt="Ikigai Logo" class="logo">
+        </div>
+        
+        <!-- Botón menú móvil -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <ion-icon name="menu-outline"></ion-icon>
+        </button>
+
+        <nav class="nav-links" id="nav-links">
+            <a href="javascript:void(0)" class="nav-showroom-btn" onclick="navigate('showroom'); toggleMobileMenu(true)">Showroom Virtual</a>
+            <a href="javascript:void(0)" onclick="navigate('lineas'); toggleMobileMenu(true)">Línea de productos</a>
+            <a href="javascript:void(0)" onclick="navigate('clientes'); toggleMobileMenu(true)">Clientes</a>
+            <a href="javascript:void(0)" onclick="navigate('nosotros'); toggleMobileMenu(true)">Nosotros</a>
+            <a href="javascript:void(0)" onclick="navigate('sustentabilidad'); toggleMobileMenu(true)">Sustentabilidad</a>
+            <a href="javascript:void(0)" onclick="navigate('contacto'); toggleMobileMenu(true)">Contacto</a>
+            <div class="cart-icon" onclick="toggleCart(); toggleMobileMenu(true)">
+                <ion-icon name="cart-outline"></ion-icon>
+                <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-content">
+        <!-- Vistas dinámicas cargadas por JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="sec-contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Ikigai Diseño</h3>
+                <p>Diseño elegante, minimalista y arquitectónico.</p>
+            </div>
+            <div class="footer-section" style="text-align: center;">
+                <h3>Contacto</h3>
+                <a href="mailto:contacto@ikigaidiseno.cl">contacto@ikigaidiseno.cl</a>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociales</h3>
+                <div style="display: flex; flex-direction: row; gap: 15px;">
+                    <a href="https://wa.me/56945193132" target="_blank">
+                        <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp
+                    </a>
+                    <a href="https://instagram.com/ikigaidiseno" target="_blank">
+                        <ion-icon name="logo-instagram"></ion-icon> @ikigaidiseno
+                    </a>
+                    <a href="https://www.tiktok.com/@ikigaidiseno" target="_blank">
+                        <ion-icon name="logo-tiktok"></ion-icon> @ikigaidiseno
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Ikigai Diseño. Todos los derechos reservados. | Visitas: <span id="visit-counter">...</span>
+        </div>
+    </footer>
+
+    <!-- Carrito (Drawer Lateral) -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2>Carrito de Compras</h2>
+            <button class="close-btn" onclick="toggleCart()"><ion-icon name="close-outline"></ion-icon></button>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <!-- Items del carrito -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: $<span id="cart-total-price">0</span></div>
+            <button class="checkout-btn" style="width: 100%; padding: 15px; font-size: 1.1rem; letter-spacing: 1px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); cursor: pointer; transition: 0.3s; font-family: 'ISOCP', var(--font-primary);" onmouseover="this.style.background='var(--accent-color)'; this.style.borderColor='var(--accent-color)'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.borderColor='var(--primary-color)'; this.style.color='var(--primary-color)';" onclick="checkout()">Finalizar Compra</button>
+        </div>
+    </div>
+    <!-- Overlay del Carrito -->
+    <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+    <!-- Lightbox Overlay -->
+    <div id="lightbox-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; justify-content:center; align-items:center; cursor:pointer;" onclick="closeLightbox()">
+        <span style="position:absolute; top:20px; right:30px; color:white; font-size:3rem; cursor:pointer;">&times;</span>
+        <div id="lightbox-content" style="max-width:90%; max-height:90%; cursor:default;" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/56945193132" target="_blank" class="floating-whatsapp" aria-label="Chat on WhatsApp">
+        <ion-icon name="logo-whatsapp"></ion-icon>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+
+
+</body>
+</html>

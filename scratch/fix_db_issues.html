@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fix DB Issues</title>
+</head>
+<body>
+    <h1>Fixing DB Issues...</h1>
+    <pre id="log"></pre>
+    <script>
+        const log = (msg) => {
+            document.getElementById('log').innerHTML += msg + '\n';
+            console.log(msg);
+        };
+
+        const supabaseUrl = 'https://uweuupdtxzkwiugaackz.supabase.co';
+        const supabaseKey = 'sb_publishable_0TuBGwD_SSK4cJVn5G_Hyg_3cubQx1E';
+
+        async function fix() {
+            try {
+                // 1. Fix precio_2x
+                const p2xUpdates = [
+                    { id: 'cnc-4', precio_2x: 300000 },
+                    { id: 'cont-8', precio_2x: 360000 },
+                    { id: 'cont-9', precio_2x: 140000 }
+                ];
+
+                for (let u of p2xUpdates) {
+                    log(`Updating precio_2x for ${u.id}`);
+                    const res = await fetch(`${supabaseUrl}/rest/v1/productos?id=eq.${u.id}`, {
+                        method: 'PATCH',
+                        headers: { 
+                            'apikey': supabaseKey, 
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ precio_2x: u.precio_2x })
+                    });
+                    if (!res.ok) log(`Error ${u.id}: ` + await res.text());
+                    else log(`OK ${u.id}`);
+                }
+
+                // 2. Fix images for Arrimo RAW and Mesa RAW
+                const arrimoImages = ['assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 1.png', 'assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 2.png'];
+                const arrimoPlanos = 'assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Planos arrimo raw.jpg';
+                
+                const mesaRawImages = ['assets/3. Línea CONTEMPORÁNEO/7. Mesa RAW/Mesa RAW 1.png', 'assets/3. Línea CONTEMPORÁNEO/7. Mesa RAW/Mesa RAW 2.png'];
+                const mesaRawPlanos = 'assets/3. Línea CONTEMPORÁNEO/7. Mesa RAW/Planos mesa RAW.jpg';
+
+                log("Updating Arrimo RAW");
+                await fetch(`${supabaseUrl}/rest/v1/productos?id=eq.cont-1`, {
+                    method: 'PATCH',
+                    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imagenes: arrimoImages, planos: arrimoPlanos, nombre: 'Arrimo RAW' })
+                });
+
+                log("Updating Mesa RAW");
+                await fetch(`${supabaseUrl}/rest/v1/productos?id=eq.cont-3`, {
+                    method: 'PATCH',
+                    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ imagenes: mesaRawImages, planos: mesaRawPlanos, nombre: 'Mesa RAW' })
+                });
+
+                log("ALL DB ISSUES FIXED");
+            } catch (err) {
+                log("EXCEPTION: " + err.message);
+            }
+        }
+
+        fix();
+    </script>
+</body>
+</html>

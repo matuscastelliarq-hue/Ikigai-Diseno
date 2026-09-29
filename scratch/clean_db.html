@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Clean DB</title></head>
+<body>
+    <div id="result">Cleaning...</div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://uweuupdtxzkwiugaackz.supabase.co';
+        const supabaseKey = 'sb_publishable_0TuBGwD_SSK4cJVn5G_Hyg_3cubQx1E';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function cleanDb() {
+            try {
+                const { error: err1 } = await supabase.from('pedidos').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+                if (err1) throw err1;
+
+                const { error: err2 } = await supabase.from('finanzas').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+                if (err2) throw err2;
+
+                document.getElementById('result').textContent = 'SUCCESS: Database cleaned.';
+            } catch (error) {
+                document.getElementById('result').textContent = 'ERROR: ' + error.message;
+            }
+        }
+        cleanDb();
+    </script>
+</body>
+</html>

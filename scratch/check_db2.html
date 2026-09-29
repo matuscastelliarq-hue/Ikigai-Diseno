@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check DB</title>
+</head>
+<body>
+    <pre id="log"></pre>
+    <script>
+        const log = (msg) => { document.getElementById('log').innerHTML += msg + '\n'; };
+        const supabaseUrl = 'https://uweuupdtxzkwiugaackz.supabase.co';
+        const supabaseKey = 'sb_publishable_0TuBGwD_SSK4cJVn5G_Hyg_3cubQx1E';
+
+        async function check() {
+            const res = await fetch(`${supabaseUrl}/rest/v1/productos?id=in.(cont-1,cont-3)&select=id,nombre,imagenes`, {
+                headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
+            });
+            const data = await res.json();
+            log(JSON.stringify(data, null, 2));
+
+            // Set timestamps for CNC to order them correctly in DB
+            // Escritorio: 2024-01-01
+            // Repisa: 2024-01-02
+            // Mesa: 2024-01-03
+            // Sitial: 2024-01-04
+            const updates = [
+                { id: 'cnc-1', created_at: '2024-01-01T00:00:00Z' },
+                { id: 'cnc-2', created_at: '2024-01-02T00:00:00Z' },
+                { id: 'cnc-3', created_at: '2024-01-03T00:00:00Z' },
+                { id: 'cnc-4', created_at: '2024-01-04T00:00:00Z' },
+                { id: 'cnc-5', created_at: '2024-01-05T00:00:00Z' }
+            ];
+            for (let u of updates) {
+                await fetch(`${supabaseUrl}/rest/v1/productos?id=eq.${u.id}`, {
+                    method: 'PATCH',
+                    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ created_at: u.created_at })
+                });
+            }
+            log("CNC Timestamps updated");
+        }
+        check();
+    </script>
+</body>
+</html>
