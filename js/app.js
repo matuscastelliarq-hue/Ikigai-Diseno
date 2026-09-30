@@ -483,9 +483,6 @@ function navigate(vista, param = null, pushState = true) {
                 if (etaEl) {
                     if (result && result.fechaEstimada) {
                         const d = new Date(result.fechaEstimada);
-                        // Add 3 hours offset or use local time correctly to prevent previous day issue
-                        d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
-                        
                         const dd = String(d.getDate()).padStart(2, '0');
                         const mm = String(d.getMonth() + 1).padStart(2, '0');
                         let dateString = `${dd}/${mm}`;
