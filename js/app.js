@@ -1987,7 +1987,7 @@ window.submitCheckout = async function(event) {
 
 
         // 4. Preparar datos para el backend
-        const returnUrl = window.location.origin + '//api/confirmar-transaccion';
+        const returnUrl = window.location.origin + '/api/confirmar-transaccion';
         const payload = {
             clienteId: clienteId,
             total: total,
@@ -1998,7 +1998,7 @@ window.submitCheckout = async function(event) {
         };
 
         // 5. Llamar a nuestro backend seguro (Netlify Function)
-        const response = await fetch('//api/crear-transaccion', {
+        const response = await fetch('/api/crear-transaccion', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
