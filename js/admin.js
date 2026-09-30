@@ -278,7 +278,7 @@ async function refreshAllData() {
         const { data: pedidos, error } = await supabase
             .from('pedidos')
             .select(`
-                id, estado, total, fecha_ingreso, fecha_estimada_entrega, notas, cliente_id, boleta_folio, boleta_error,
+                id, orden_serial, transbank_status, estado, total, fecha_ingreso, fecha_estimada_entrega, notas, cliente_id, boleta_folio, boleta_error,
                 clientes ( nombre, email, telefono ),
                 pedido_items ( id, producto_id, cantidad, barniz, precio_unitario )
             `)
@@ -980,8 +980,9 @@ function renderProductionCalendar(timeline) {
     
     // Inyectar pedidos en sus fechas
     pedidosList.forEach(pedido => {
-        // Ignoramos pedidos ya entregados/archivados
+        // Ignoramos pedidos ya entregados/archivados o con pago no exitoso
         if (pedido.estado === 'e) Entregado') return;
+        if (pedido.transbank_status === 'INITIALIZED' || pedido.transbank_status === 'REJECTED' || pedido.transbank_status === 'FAILED') return;
         
         // Obtener la fecha de entrega
         const estDateObj = pedido.fecha_estimada_entrega ? new Date(pedido.fecha_estimada_entrega) : (timeline[pedido.id] ? timeline[pedido.id].deliveryDate : null);
