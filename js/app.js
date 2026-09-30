@@ -1524,7 +1524,7 @@ window.renderSuccessPage = async function(orden) {
                     <ion-icon name="checkmark-outline"></ion-icon>
                 </div>
                 <h1 class="success-title">¡Pago Exitoso!</h1>
-                <p class="success-text">Hemos recibido tu pedido <span class="order-number">#${orden ? orden.replace('O-', '') : 'Desconocido'}</span>.<br>Nuestro equipo ya está en proceso de ingreso y gestión, te notificaremos para coordinar la entrega.</p>
+                <p class="success-text">Hemos recibido tu pedido <span class="order-number">#${orden ? orden.replace('O-', '') : 'Desconocido'}</span>.<br>Nuestro equipo ya está en proceso de ingreso y gestión del pedido, te notificaremos unos días antes de terminar tus productos para coordinar la entrega.</p>
                 <a href="/?v=home" class="btn-home">Volver a la página principal</a>
             </div>
         </div>
