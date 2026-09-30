@@ -859,8 +859,21 @@ function renderProductionCalendar(timeline) {
                 padding: 10px;
                 text-align: center;
                 font-weight: 600;
-                border-bottom: 1px solid var(--border);
                 color: var(--accent);
+            }
+            .timeline-weekdays {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                background: var(--bg-sidebar);
+                border-top: 1px solid rgba(0,0,0,0.05);
+                border-bottom: 1px solid var(--border);
+            }
+            .timeline-weekdays div {
+                text-align: center;
+                padding: 5px 0;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: var(--text-muted);
             }
             .timeline-days {
                 display: grid;
@@ -875,6 +888,12 @@ function renderProductionCalendar(timeline) {
                 display: flex;
                 flex-direction: column;
                 position: relative;
+            }
+            .timeline-day.weekend {
+                background: #fafafa;
+            }
+            .timeline-day.weekend .day-number {
+                color: #d0d0d0;
             }
             .timeline-day.today {
                 background: rgba(199, 156, 110, 0.05);
@@ -936,8 +955,11 @@ function renderProductionCalendar(timeline) {
     const currentMonthIndex = now.getMonth();
     
     let html = `
-        <div class="calendar-timeline-header">
+        <div class="calendar-timeline-header" style="display: flex; align-items: center;">
             <ion-icon name="calendar-outline"></ion-icon> Fechas de Entrega Estimadas (Flujo de 3 meses)
+            <button class="btn-secondary" style="margin-left: auto; font-size: 0.85rem; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 5px;" onclick="optimizarCola()">
+                <ion-icon name="flash-outline"></ion-icon> Optimizar Cola
+            </button>
         </div>
         <div class="timeline-months-wrapper">
     `;
@@ -956,14 +978,27 @@ function renderProductionCalendar(timeline) {
         html += `
             <div class="timeline-month">
                 <div class="timeline-month-title">${monthNames[m]} ${y}</div>
+                <div class="timeline-weekdays">
+                    <div>L</div><div>M</div><div>W</div><div>J</div><div>V</div><div style="color:#d0d0d0;">S</div><div style="color:#d0d0d0;">D</div>
+                </div>
                 <div class="timeline-days">
         `;
+        
+        // Calcular días vacíos para alinear el día 1
+        const firstDay = new Date(y, m, 1).getDay(); // 0 = Domingo, 1 = Lunes, etc.
+        const emptyDays = firstDay === 0 ? 6 : firstDay - 1;
+        
+        for (let e = 0; e < emptyDays; e++) {
+            html += `<div class="timeline-day empty" style="background: transparent;"></div>`;
+        }
         
         for (let d = 1; d <= daysInMonth; d++) {
             const isToday = (d === now.getDate() && m === now.getMonth() && y === now.getFullYear());
             const dateStr = `${y}-${String(m+1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const currentDayOfWeek = new Date(y, m, d).getDay();
+            const isWeekend = currentDayOfWeek === 0 || currentDayOfWeek === 6;
             
-            html += `<div class="timeline-day ${isToday ? 'today' : ''}" data-date="${dateStr}">
+            html += `<div class="timeline-day ${isToday ? 'today' : ''} ${isWeekend ? 'weekend' : ''}" data-date="${dateStr}">
                         <div class="day-number">${d}</div>
                         <div class="day-badges" id="badges-${dateStr}"></div>
                      </div>`;
@@ -984,11 +1019,15 @@ function renderProductionCalendar(timeline) {
         if (pedido.estado === 'e) Entregado') return;
         if (pedido.transbank_status === 'INITIALIZED' || pedido.transbank_status === 'REJECTED' || pedido.transbank_status === 'FAILED') return;
         
-        // Obtener la fecha de entrega
+        // Obtener la fecha de entrega en hora local
         const estDateObj = pedido.fecha_estimada_entrega ? new Date(pedido.fecha_estimada_entrega) : (timeline[pedido.id] ? timeline[pedido.id].deliveryDate : null);
         if (!estDateObj) return; // No tiene fecha
         
-        const dateStr = estDateObj.toISOString().split('T')[0];
+        const yEst = estDateObj.getFullYear();
+        const mEst = String(estDateObj.getMonth() + 1).padStart(2, '0');
+        const dEst = String(estDateObj.getDate()).padStart(2, '0');
+        const dateStr = `${yEst}-${mEst}-${dEst}`;
+        
         const badgesContainer = document.getElementById(`badges-${dateStr}`);
         
         // Si la fecha cae dentro de los 3 meses generados
@@ -1047,11 +1086,11 @@ async function drop(ev, nuevoEstado) {
     ev.preventDefault();
     const pedidoId = ev.dataTransfer.getData("text/plain");
     if (pedidoId) {
-        await movePedidoState(pedidoId, nuevoEstado);
+        await window.movePedidoState(pedidoId, nuevoEstado);
     }
 }
 
-async function movePedidoState(pedidoId, nuevoEstado) {
+window.movePedidoState = async function(pedidoId, nuevoEstado) {
     try {
         const { error } = await supabase
             .from('pedidos')
@@ -1149,9 +1188,33 @@ window.openPedidoDetailModal = function(pedidoId) {
                 )
             }
         </div>
+        <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px; text-align: right;">
+            <button class="danger" onclick="deletePedido('${pedido.id}')" style="padding: 10px 20px; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px;">
+                <ion-icon name="trash-outline"></ion-icon> Eliminar Pedido
+            </button>
+        </div>
     `;
 
     modal.classList.add('active');
+};
+
+window.deletePedido = async function(pedidoId) {
+    if(!confirm("¿Estás seguro de que deseas eliminar este pedido por completo? Esta acción es irreversible.")) return;
+    try {
+        const btn = document.querySelector('#modal-pedido-detalle button.danger');
+        if (btn) btn.innerHTML = 'Eliminando...';
+        
+        await supabase.from('pedido_items').delete().eq('pedido_id', pedidoId);
+        const { error } = await supabase.from('pedidos').delete().eq('id', pedidoId);
+        if (error) throw error;
+        
+        alert("Pedido eliminado exitosamente.");
+        window.closePedidoDetailModal();
+        await refreshAllData();
+        renderActiveTab();
+    } catch (e) {
+        alert("Error al eliminar pedido: " + e.message);
+    }
 };
 
 window.closePedidoDetailModal = function() {
@@ -1780,14 +1843,39 @@ async function calculateEstimatedDates() {
         if (matchingPedido) {
             const currentEst = matchingPedido.fecha_estimada_entrega ? new Date(matchingPedido.fecha_estimada_entrega) : null;
             
-            // If mismatch, update Supabase silently
-            if (!currentEst || Math.abs(currentEst.getTime() - estVal.getTime()) > 60000) {
+            // If there's no estimated date, assign the theoretical one from the timeline
+            if (!currentEst) {
                 await supabase
                     .from('pedidos')
                     .update({ fecha_estimada_entrega: estVal.toISOString() })
                     .eq('id', pedId);
+                matchingPedido.fecha_estimada_entrega = estVal.toISOString(); // update local object
             }
         }
+    }
+}
+
+window.optimizarCola = async function() {
+    if(!confirm("¿Deseas optimizar la cola? Esto adelantará las fechas de todos los pedidos activos usando el tiempo que hayas ganado al terminar pedidos antes de tiempo. Se reescribirán las fechas basándose en la disponibilidad desde hoy.")) return;
+    
+    const btn = document.querySelector('.calendar-timeline-header button');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<ion-icon name="hourglass-outline"></ion-icon> Optimizando...'; }
+    
+    try {
+        const timeline = computeProductionTimeline(pedidosList);
+        for (const pedId in timeline) {
+            const estVal = timeline[pedId].deliveryDate;
+            await supabase
+                .from('pedidos')
+                .update({ fecha_estimada_entrega: estVal.toISOString() })
+                .eq('id', pedId);
+        }
+        alert("¡Cola optimizada exitosamente!");
+        await refreshAllData();
+        renderActiveTab();
+    } catch (e) {
+        alert("Error al optimizar: " + e.message);
+        if (btn) { btn.disabled = false; btn.innerHTML = '<ion-icon name="flash-outline"></ion-icon> Optimizar Cola'; }
     }
 }
 
