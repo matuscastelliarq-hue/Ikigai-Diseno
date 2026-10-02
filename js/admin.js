@@ -328,8 +328,14 @@ function renderActiveTab() {
    1. DASHBOARD MODULE
    ========================================== */
 function renderDashboard() {
-    // Pedidos activos (diferentes a e) Despacho)
-    const activos = pedidosList.filter(p => p.estado !== 'e) Despacho');
+    // Pedidos activos (aquellos que están en una de las columnas del Kanban)
+    const activeStates = [
+        'a) Recibido y gestión de materiales',
+        'b) CNC/Dimensionado',
+        'c) Taller',
+        'd) Despacho'
+    ];
+    const activos = pedidosList.filter(p => p.estado && activeStates.includes(p.estado));
     document.getElementById('kpi-pedidos-activos').innerText = activos.length;
 
     // Calcular Utilidad General
