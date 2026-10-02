@@ -31,10 +31,10 @@ const catalogData = {
         descripcion: 'Precisión digital para ensambles perfectos y diseños vanguardistas, Calidad y eficiencia geométrica',
         productos: [
             { id: 'cnc-1', nombre: 'Escritorio pupitre', precio: 140000, medidas: '120 x 60 x a75 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/1. Escritorio Pupitre/Escritorio Pupitre 1.png', 'assets/2. Línea CNC/1. Escritorio Pupitre/Escritorio Pupitre 2.png'] },
-            { id: 'cnc-4', nombre: 'Repisa NET', precio: 100000, medidas: '100 x 30 x a180 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/2. Repisa NET/Repisa NET 1.png', 'assets/2. Línea CNC/2. Repisa NET/Repisa NET 2.jpg'] },
-            { id: 'cnc-2', nombre: 'Mesa triqueta', precio: 110000, medidas: '120 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/3. Mesa Triqueta/Mesa Triqueta 1.png', 'assets/2. Línea CNC/3. Mesa Triqueta/Mesa triqueta 2.png'] },
-            { id: 'cnc-5', nombre: 'Sitial N', precio: 60000, medidas: '45 x 45 x a85 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/4. Sitial N/Sitial N 1.png', 'assets/2. Línea CNC/4. Sitial N/Sitial N2.png'] },
-            { id: 'cnc-3', nombre: 'Piso Eslinga', precio: 45000, medidas: '40 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 1.jpg', 'assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 2.jpg'] }
+            { id: 'cnc-2', nombre: 'Repisa NET', precio: 100000, medidas: '100 x 30 x a180 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/2. Repisa NET/Repisa NET 1.png', 'assets/2. Línea CNC/2. Repisa NET/Repisa NET 2.jpg'] },
+            { id: 'cnc-3', nombre: 'Mesa triqueta', precio: 110000, medidas: '120 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/3. Mesa Triqueta/Mesa Triqueta 1.png', 'assets/2. Línea CNC/3. Mesa Triqueta/Mesa triqueta 2.png'] },
+            { id: 'cnc-4', nombre: 'Sitial N', precio: 60000, medidas: '45 x 45 x a85 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/4. Sitial N/Sitial N 1.png', 'assets/2. Línea CNC/4. Sitial N/Sitial N2.png'] },
+            { id: 'cnc-6', nombre: 'Piso Eslinga', precio: 45000, medidas: '40 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 1.jpg', 'assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 2.jpg'] }
         ]
     },
     contemporaneo: {
