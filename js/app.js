@@ -713,7 +713,7 @@ async function initSpline() {
 // Render: Home Integrado
 function renderHome() {
     const isMobile = window.innerWidth <= 992;
-    const bgImage = isMobile ? 'assets/1 teléfono.png' : 'assets/1.jpg';
+    const bgImage = isMobile ? 'assets/1 teléfono.png' : 'assets/1.png';
 
     let html = `
         <section class="hero" style="background-image: url('${bgImage}');" id="hero-section">

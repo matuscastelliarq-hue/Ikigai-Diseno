@@ -18,9 +18,9 @@ const catalogData = {
         productos: [
             { id: 'zen-1', nombre: 'Arrimo ZEN', precio: 120000, medidas: '100 x 30 x a80 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/1. Arrimo ZEN/Arrimo ZEN 1.png', 'assets/1. Línea ZEN/1. Arrimo ZEN/Arrimo ZEN 2.jpg'] },
             { id: 'zen-2', nombre: 'Repisa ZEN', precio: 90000, medidas: '80 x 25 x a150 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/2. Repisa ZEN/Repisa ZEN 1.png', 'assets/1. Línea ZEN/2. Repisa ZEN/Repisa Zen 2.jpg'] },
-            { id: 'zen-3', nombre: 'Mesa Plinto', precio: 160000, medidas: 'D90 y a75 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/3. Mesa PLINTO/Mesa Plinto 1.jpg', 'assets/1. Línea ZEN/3. Mesa PLINTO/Mesa Plinto 2.png'] },
-            { id: 'zen-4', nombre: 'Sillón ZEN 2 cuerpos', precio: 350000, medidas: '160 x 80 x a70 cm', material: 'Pino / Tela', imagenes: ['assets/1. Línea ZEN/4. Sillón ZEN 2 cuerpos/Sillón 2 cuerpos ZEN 1.jpg', 'assets/1. Línea ZEN/4. Sillón ZEN 2 cuerpos/Sillón 2 cuerpos ZEN 2.jpg'] },
-            { id: 'zen-5', nombre: 'Sillón ZEN 1 cuerpo', precio: 200000, medidas: '80 x 80 x a70 cm', material: 'Pino / Tela', imagenes: ['assets/1. Línea ZEN/5. Sillón ZEN 1 cuerpo/Sillón 1 cuerpo ZEN 1.jpg', 'assets/1. Línea ZEN/5. Sillón ZEN 1 cuerpo/Sillón 1 cuerpo ZEN 2.jpg'] },
+            { id: 'zen-3', nombre: 'Mesa Plinto', precio: 160000, medidas: 'D90 y a75 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/3. Mesa PLINTO/Mesa Plinto 1.png', 'assets/1. Línea ZEN/3. Mesa PLINTO/Mesa Plinto 2.png'] },
+            { id: 'zen-4', nombre: 'Sillón ZEN 2 cuerpos', precio: 350000, medidas: '160 x 80 x a70 cm', material: 'Pino / Tela', imagenes: ['assets/1. Línea ZEN/4. Sillón ZEN 2 cuerpos/Sillón 2 cuerpos ZEN 1.png', 'assets/1. Línea ZEN/4. Sillón ZEN 2 cuerpos/Sillón 2 cuerpos ZEN 2.jpg'] },
+            { id: 'zen-5', nombre: 'Sillón ZEN 1 cuerpo', precio: 200000, medidas: '80 x 80 x a70 cm', material: 'Pino / Tela', imagenes: ['assets/1. Línea ZEN/5. Sillón ZEN 1 cuerpo/Sillón 1 cuerpo ZEN 1.png', 'assets/1. Línea ZEN/5. Sillón ZEN 1 cuerpo/Sillón 1 cuerpo ZEN 2.jpg'] },
             { id: 'zen-6', nombre: 'Mesa OVAL', precio: 180000, medidas: '140 x 90 x a75 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/6. Mesa OVAL/Mesa OVAL 1.png', 'assets/1. Línea ZEN/6. Mesa OVAL/Mesa OVAL 2.jpg'] },
             { id: 'zen-7', nombre: 'Mesa ZEN', precio: 150000, medidas: '120 x 80 x a75 cm', material: 'Pino', imagenes: ['assets/1. Línea ZEN/7. Mesa ZEN/Mesa ZEN 1.png', 'assets/1. Línea ZEN/7. Mesa ZEN/Mesa ZEN 2.png'] }
         ]
@@ -33,7 +33,7 @@ const catalogData = {
             { id: 'cnc-1', nombre: 'Escritorio pupitre', precio: 140000, medidas: '120 x 60 x a75 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/1. Escritorio Pupitre/Escritorio Pupitre 1.png', 'assets/2. Línea CNC/1. Escritorio Pupitre/Escritorio Pupitre 2.jpg'] },
             { id: 'cnc-4', nombre: 'Repisa NET', precio: 100000, medidas: '100 x 30 x a180 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/2. Repisa NET/Repisa NET 1.png', 'assets/2. Línea CNC/2. Repisa NET/Repisa NET 2.jpg'] },
             { id: 'cnc-2', nombre: 'Mesa triqueta', precio: 110000, medidas: '120 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/3. Mesa Triqueta/Mesa Triqueta 1.jpg', 'assets/2. Línea CNC/3. Mesa Triqueta/Mesa triqueta 2.png'] },
-            { id: 'cnc-5', nombre: 'Silla N', precio: 60000, medidas: '45 x 45 x a85 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/4. Silla N/Silla N 1.png', 'assets/2. Línea CNC/4. Silla N/Silla N 2.png'] },
+            { id: 'cnc-5', nombre: 'Sitial N', precio: 60000, medidas: '45 x 45 x a85 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/4. Sitial N/Sitial N 1.png', 'assets/2. Línea CNC/4. Sitial N/Sitial N2.png'] },
             { id: 'cnc-3', nombre: 'Piso Eslinga', precio: 45000, medidas: '40 x 40 x a45 cm', material: 'Terciado Mueblista', imagenes: ['assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 1.jpg', 'assets/2. Línea CNC/5. Piso Eslinga/Piso Eslinga 2.jpg'] }
         ]
     },
@@ -49,7 +49,7 @@ const catalogData = {
             { id: 'cont-5', nombre: 'Repisa T', precio: 180000, medidas: '100 x 30 x a190 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/4. Repisa T/Repisa T 1.png', 'assets/3. Línea CONTEMPORÁNEO/4. Repisa T/Repisa T 2.png'] },
             { id: 'cont-6', nombre: 'Mesa N', precio: 150000, medidas: '120 x 80 x a75 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/5. Mesa N/Mesa N 1.jpg', 'assets/3. Línea CONTEMPORÁNEO/5. Mesa N/Mesa N 2.jpg'] },
             { id: 'cont-7', nombre: 'Promo Mesa N', precio: 140000, medidas: '120 x 80 x a75 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/5. Mesa N/Mesa N 1.jpg', 'assets/3. Línea CONTEMPORÁNEO/5. Mesa N/Mesa N 2.jpg'] },
-            { id: 'cont-8', nombre: 'Arrimo RAW', precio: 160000, medidas: '120 x 30 x a80 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 1.jpg', 'assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 2.jpg'] },
+            { id: 'cont-8', nombre: 'Arrimo RAW', precio: 160000, medidas: '120 x 30 x a80 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 1.png', 'assets/3. Línea CONTEMPORÁNEO/6. Arrimo RAW/Arrimo RAW 2.png'] },
             { id: 'cont-9', nombre: 'Mesa RAW', precio: 220000, medidas: '150 x 85 x a75 cm', material: 'Roble', imagenes: ['assets/3. Línea CONTEMPORÁNEO/7. Mesa RAW rodela/Mesa RAW 1.png', 'assets/3. Línea CONTEMPORÁNEO/7. Mesa RAW rodela/Mesa RAW 2.png'] }
         ]
     },
